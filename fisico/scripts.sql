@@ -67,3 +67,37 @@ BEGIN
     DBMS_OUTPUT.PUT_LINE('Chefia ' || qtdChefiados || ' medicos');
 END;
 /
+    
+--percorre a tabela consulta e retorna todas as consultas de um médico específico
+
+DECLARE
+v_cpf_medico MEDICO.CPF_M%TYPE := :cpf_medico;
+BEGIN
+FOR consulta_out IN (
+SELECT c.CPF_M, c.CPF_P, c.timestamp, p.Nome AS Nome_Paciente
+FROM CONSULTA c INNER JOIN PACIENTE p ON c.CPF_P = p.CPF_P
+WHERE c.CPF_M = v_cpf_medico
+) LOOP
+DBMS_OUTPUT.PUT_LINE('Médico: ' || consulta_out.CPF_M ||
+' - Paciente: ' || consulta_out.Nome_Paciente ||
+' - Data/Hora: ' || TO_CHAR(consulta_out.timestamp, 'YYYY-MM-DD HH24:MI:SS'));
+END LOOP;
+END;
+
+-- busca os médicos e seus respectivos departamentos, e exibe o nome do médico junto com o nome do departamento onde ele trabalha
+
+DECLARE
+    v_nome_medico VARCHAR(40);
+    v_departamento_nome VARCHAR(40);
+BEGIN
+    -- Para cada médico, busque o nome do médico e o nome do departamento onde ele trabalha
+    FOR medico IN (
+        SELECT m.NOME AS nome_medico, d.NOME AS nome_departamento
+        FROM MEDICO m
+        JOIN TRABALHA_MED tm ON m.CPF = tm.CPF
+        JOIN DEPARTAMENTO d ON tm.COD = d.COD
+    ) LOOP
+        -- Exibe o nome do médico e o nome do departamento
+        DBMS_OUTPUT.PUT_LINE('Médico: ' || medico.nome_medico || ', Departamento: ' || medico.nome_departamento);
+    END LOOP;
+END;
