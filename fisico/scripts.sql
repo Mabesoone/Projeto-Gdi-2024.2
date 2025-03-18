@@ -43,6 +43,8 @@ begin
     else
         DBMS_OUTPUT.PUT_LINE('A quantidade de médicos e enfermeiros é igual');
     end if;
+    DBMS_OUTPUT.PUT_LINE('Quantidade de médicos : ' || qtdMedicos );
+    DBMS_OUTPUT.PUT_LINE('Quantidade de enfermeiros : ' || qtdEnfermeiros );
 end;
 /
 
